@@ -1,17 +1,25 @@
-from django.db.models import Q
+# from django.db.models import Q
 from django.shortcuts import render
-from ice_cream.models import Category, IceCream
+from ice_cream.models import IceCream  # Category
 
 
 def index(request):
     template_name = 'homepage/index.html'
-    # Запрос:
     ice_cream_list = IceCream.objects.values(
-        'id', 'title', 'description'
+        'id', 'title', 'description', 'price'
     ).filter(
-        (Q(is_published=True) & Q(is_on_main=True))
-        | (Q(title__contains='эскимо') & Q(is_published=True))
-    ).order_by('title')[1:4]
+        is_published=True,
+        is_on_main=True,
+        category__is_published=True
+    )
+
+    # Запрос c примером Ку-объектов:
+    # ice_cream_list = IceCream.objects.values(
+    #    'id', 'title', 'description'
+    # ).filter(
+    #     (Q(is_published=True) & Q(is_on_main=True))
+    #     | (Q(title__contains='эскимо') & Q(is_published=True))
+    # ).order_by('title')[1:4]
 
     # categories = Category.objects.values(
     #     'id', 'output_order', 'title'
