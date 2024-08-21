@@ -1,9 +1,21 @@
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404, render
+from ice_cream.models import IceCream
 
 
 def ice_cream_detail(request, pk):
     template = 'ice_cream/detail.html'
-    context = {}
+
+    # Отфильтруй объект модели IceCream,
+    # у которого pk равен значению переменной из пути.
+    # Если такого объекта не существует - верни 404 ошибку:
+    ice_cream = get_object_or_404(
+        IceCream.objects.values(
+            'title', 'description'
+            ).filter(is_published=True), pk=pk
+    )
+    context = {
+        'ice_cream': ice_cream,
+    }
     return render(request, template, context)
 
 
